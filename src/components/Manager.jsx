@@ -64,6 +64,30 @@ const Manager = () => {
                     src="https://cdn.lordicon.com/sbnjyzil.json"
                     trigger="hover"
                     stroke="bold"></lord-icon>Add Password</button>
+                <div className='flex flex-col items-center w-full gap-5 mt-5 '>
+                    <h2 className='font-bold'>Your Passwords:</h2>
+                    {passwordArray.length === 0 ? <div>No passwords to show! Start adding passwords now.</div>
+                        :
+                        <table className="table-auto w-full rounded-md overflow-hidden ">
+                            <thead className='bg-green-600 text-white '>
+                                <tr>
+                                    <th className='py-1.5'>Website</th>
+                                    <th className='py-1.5'>Username</th>
+                                    <th className='py-1.5'>Password</th>
+                                </tr>
+                            </thead>
+                            <tbody className='bg-green-100'>
+                                {passwordArray.map((item, index) => (
+                                    <tr key={index}>
+                                        <td className='text-center w-32 border-2 py-1 border-white '><a href={item.site} target='_blank' rel='noopener'>{item.site}</a></td>
+                                        <td className='text-center w-32 border-2 py-1 border-white '>{item.username}</td>
+                                        <td className='text-center w-32 border-2 py-1 border-white '>{item.password}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>}
+
+                </div>
             </div>
         </>
     )
