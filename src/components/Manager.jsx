@@ -88,65 +88,65 @@ const Manager = () => {
                 theme="dark"
             />
 
-            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"><div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#C9EBFF,transparent)]"></div></div>
+            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size-3 md:size:6 rem_4rem]"><div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#C9EBFF,transparent)]"></div></div>
 
-            <div className=' mx-60 flex  flex-col justify-center items-center gap-7 p-4 ' >
+            <div className=' md:mx-60 mt-2 flex  flex-col justify-center items-center gap-5 md:gap-7 p-4 ' >
                 <div className='text-center'>
                     <h1><span className='font-bold'>AR</span>PassWizard</h1>
                     <p>Your own Password Manager</p>
                 </div>
                 <form action="" onSubmit={savePassword} className=' w-full flex  flex-col  items-center gap-6 p-1'>
-                    <input value={form.site} onChange={handleChange} type="text" placeholder='Enter Website URL' className='w-full rounded-2xl border text-center pt-1 pb-1 border-green-700  focus:ring-1 ring-green-400  duration-200 outline-none bg-white  ' name="site" id="" />
-                    <div className='w-full flex gap-8 ' >
-                        <input value={form.username} onChange={handleChange} type="text" placeholder='Input Username' className='p-1 w-full rounded-2xl border border-green-700  focus:ring-1 ring-green-400  bg-white duration-200 outline-none text-center' name="username" id="" />
+                    <input value={form.site} onChange={handleChange} type="text" placeholder='Enter Website URL or App name' className='w-full rounded-2xl border text-center pt-1 pb-1 border-blue-700  focus:ring-1 ring-blue-400  duration-200 outline-none bg-white  ' name="site" id="" />
+                    <div className='w-full flex flex-col md:flex-row gap-6 md:gap-8 ' >
+                        <input value={form.username} onChange={handleChange} type="text" placeholder='Input Username' className='p-1 w-full rounded-2xl border border-blue-700  focus:ring-1 ring-blue-400  bg-white duration-200 outline-none text-center' name="username" id="" />
 
                         <div className='w-full'>
-                            <input value={form.password} onChange={handleChange} type="password" placeholder='Input Password' className='p-1 w-full border-green-700  focus:ring-1 ring-green-400 bg-white  duration-200 outline-none   rounded-2xl border pl-2 text-center' name="password" id="" />
+                            <input value={form.password} onChange={handleChange} type="password" placeholder='Input Password' className='p-1 w-full border-blue-700  focus:ring-1 ring-blue-400 bg-white  duration-200 outline-none   rounded-2xl border pl-2 text-center' name="password" id="" />
                         </div>
                     </div>
-                    <button type='submit' className='flex justify-center items-center  rounded-2xl px-3 bg-green-300 hover:bg-green-400  outline-none hover:text-white hover:ring-2 ring-green-600 duration-200  cursor-pointer '>
+                    <button type='submit' className='flex justify-center gap-1 items-center  rounded-2xl px-3 bg-blue-300 hover:bg-blue-400  outline-none hover:text-white hover:ring-2 active:ring-2 ring-blue-600 duration-200  cursor-pointer '>
                         <lord-icon
                             src="https://cdn.lordicon.com/sbnjyzil.json"
                             trigger="hover"
                             stroke="bold"
                             style={{ width: 30, height: 35 }}>
-                        </lord-icon> Save Password</button>
+                        </lord-icon> <span>Save Password</span></button>
                 </form>
                 <div className='flex flex-col items-center w-full gap-5  mb-5'>
-                    <h2 className='font-bold'>Your Passwords:</h2>
-                    {passwordArray.length === 0 ? <div>No passwords to show. Start adding passwords now!</div>
+                    {passwordArray.length !== 0 && <h2 className='font-bold'>Your Passwords:</h2>}
+                    {passwordArray.length === 0 ? <div className='text-center'>No passwords to show. Start adding passwords now!</div>
                         :
-                        <table className="table-auto w-full rounded-xl overflow-hidden ">
-                            <thead className='bg-green-600 text-white '>
+                        <table className="table-auto    w-full rounded-xl overflow-hidden ">
+                            <thead className='bg-blue-600 text-white  text-[0.8rem] md:text-[1rem]'>
                                 <tr>
-                                    <th className='py-1.5  border' >Website</th>
+                                    <th className='py-1.5 border'>Website</th>
                                     <th className='py-1.5 border'>Username</th>
                                     <th className='py-1.5 border'>Password</th>
                                     <th className='py-1.5 border'>Action</th>
                                 </tr>
                             </thead>
-                            <tbody className='bg-green-100'>
+                            <tbody className='bg-blue-100 text-[0.8rem] md:text-[1rem] break-words'>
                                 {passwordArray.map((item, index) => (
                                     <tr key={index}>
                                         <td className='  w-32 border py-1 border-white '>
-                                            <div className='flex items-center  justify-center text-center gap-2'>
-                                                <a href={item.site} target='_blank' rel='noopener'>{item.site}</a><span title='Copy'><Copy className='text-green-700 cursor-pointer size-4' onClick={() => copyText(item.site)} /></span>
+                                            <div className='flex items-center  justify-center text-center gap-1 md:gap-2'>
+                                                <a href={item.site} target='_blank' rel='noopener'>{item.site}</a><span title='Copy'><Copy className='text-blue-700 cursor-pointer size-3 md:size-4 ' onClick={() => copyText(item.site)} /></span>
                                             </div>
                                         </td>
                                         <td className='text-center w-32 border py-1 border-white '>
-                                            <div className='flex items-center justify-center text-center gap-2 break-words'>
-                                                {item.username}<span title='Copy'> <Copy className='text-green-700 cursor-pointer size-4' onClick={() => copyText(item.username)} /></span>
+                                            <div className='flex items-center justify-center text-center gap-1 md:gap-2 '>
+                                                {item.username}<span title='Copy'> <Copy className='text-blue-700 cursor-pointer size-3 md:size-4 ' onClick={() => copyText(item.username)} /></span>
                                             </div>
                                         </td>
 
                                         <td className='text-center w-32 border py-1 border-white '>
-                                            <div className='flex items-center  justify-center text-center gap-2'>
-                                                {item.password} <span title='Copy'><Copy className='text-green-700 cursor-pointer size-4' onClick={() => copyText(item.password)} /></span>
+                                            <div className='flex items-center  justify-center text-center gap-1 md:gap-2'>
+                                                {item.password} <span title='Copy'><Copy className='text-blue-700 cursor-pointer size-3 md:size-4 ' onClick={() => copyText(item.password)} /></span>
                                             </div>
                                         </td>
 
                                         <td className='text-center w-20  border py-1 border-white '>
-                                            <div className='flex items-center justify-center gap-5'>
+                                            <div className='flex items-center justify-center mx-0.5 gap-2 md:gap-5'>
                                                 <span className='cursor-pointer' onClick={() => editPassword(item.id)}><lord-icon
                                                     src="https://cdn.lordicon.com/exymduqj.json"
                                                     trigger="hover"

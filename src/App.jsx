@@ -6,9 +6,9 @@ function App() {
 
   return (
     <>
- 
+      
       <Navbar />
-      <div className="min-h-[87vh]">  {/* to keep the footer at bottom*/}
+      <div className="min-h-[73.5vh] md:min-h-[87vh]">  {/* to keep the footer at bottom*/}
         <Manager />
       </div>
       <Footer />

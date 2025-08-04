@@ -1,12 +1,13 @@
 import React from 'react'
 
 const Navbar = () => {
+
     return (
-        <nav className='bg-green-500'>
-            <div className=' h-12 px-2 flex justify-between mx-40 items-center'>
-                <div className='font-bold text-[1.4rem]'>ARPass</div>
-                <ul className='flex gap-7'>
-                    <li><a href="#" rel='noopner'>
+        <nav className='bg-blue-400 '>
+            <div className=' h-12 px-2 flex justify-between mx-2 md:mx-40 items-center'>
+                <div className=' text-[1.2rem] md:text-[1.4rem] '><span className='font-bold to-blue-950'>AR</span>PassWizard</div>
+                <ul className='flex gap-5 md:gap-7'>
+                    <li><a href="#" rel='noopner' title='Home'>
                         <lord-icon
                             src="https://cdn.lordicon.com/jeuxydnh.json"
                             trigger="hover"
@@ -14,7 +15,7 @@ const Navbar = () => {
                             colors="primary:#0,secondary:#ffffff">
                         </lord-icon>
                     </a></li>
-                    <li><a href="https://github.com/Aamir-Rafique" target='_blank' rel='noopner'>
+                    <li><a href="https://github.com/Aamir-Rafique" title='GitHub' target='_blank' rel='noopner'>
                         <lord-icon
                             src="https://cdn.lordicon.com/jjxzcivr.json"
                             stroke="bold"
