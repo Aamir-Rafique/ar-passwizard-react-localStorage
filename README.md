@@ -62,6 +62,9 @@ cd ar-passwizard-react-localStorage
 npm install
 # or
 yarn install
+# then 
+npm i react-toastify
+npm i uuid
 ```
 
 ---
@@ -74,6 +77,7 @@ Start the development server:
 npm run dev
 # or
 yarn dev
+
 ```
 
 Then open [http://localhost:5173](http://localhost:5173) to view it in the browser.
