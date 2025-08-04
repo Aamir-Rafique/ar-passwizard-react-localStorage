@@ -175,7 +175,7 @@ See the [LICENSE](./LICENSE) file for details.
 
 ## 🙋‍♂️ Questions?
 
-If you have any questions or suggestions, feel free to open an issue or reach out on [Gmail](https://mail.google.com/mail/u/0/), [LinkedIn](https://www.linkedin.com/in/aamir-rafique-7a5bb1336/), [GitHub](https://github.com/Aamir-Rafique).
+If you have any questions or suggestions, feel free to open an issue or reach out on [Gmail](amirrafique6400@gmail.com), [LinkedIn](https://www.linkedin.com/in/aamir-rafique-7a5bb1336/), [GitHub](https://github.com/Aamir-Rafique).
 
 ---
 
