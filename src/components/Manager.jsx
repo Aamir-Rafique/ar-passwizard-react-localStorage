@@ -10,6 +10,8 @@ const Manager = () => {
 
     const [form, setForm] = useState({ site: '', username: '', password: '' });
     const [passwordArray, setPasswordArray] = useState([]);
+    const [isEditing, setIsEditing] = useState(true);
+    const [editId, setEditId] = useState(null);
 
     //load form values (site, username, password) from local storage
     useEffect(() => {
@@ -28,26 +30,32 @@ const Manager = () => {
     const savePassword = (e) => {
         e.preventDefault();
         if (!form.site) {
-            alert("Please input webiste name or url!")
+            toast("Please input webiste name or url!", {});
         }
         else if (!form.username) {
-            alert("Please input username!")
+            toast("Please input username!", {});
         }
         else if (!form.password) {
-            alert("Password field cannot be empty!")
+            toast("Password field cannot be empty!", {});
         }
         else if (form.site.length > 3 && form.username.length > 3 && form.password.length > 3) {
-            setPasswordArray([...passwordArray, { ...form, id: uuidv4() }]);
-            localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));  //save site, username and password in localStorage.
-            // console.log([...passwordArray, form]);
-            toast("Password saved! ", {
-            });
-            setForm({ site: '', username: '', password: '' });
+            if (editId) {
+                setPasswordArray([{ ...form, id: uuidv4() }, ...passwordArray]);  //to keep edited item on top
+                localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));  //save site, username and password in localStorage.
+                toast("Password Updated! ", {});
+                setForm({ site: '', username: '', password: '' });
+                setIsEditing(true);
+                setEditId(null);
+            }
+            else {
+                setPasswordArray([{ ...form, id: uuidv4() }, ...passwordArray]);
+                localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));  //save site, username and password in localStorage.
+                toast("Password saved! ", {});
+                setForm({ site: '', username: '', password: '' });
+            }
         }
         else {
-            toast("Input fields cannot have less than 3 charachters!", {
-
-            });
+            toast("Input fields cannot have less than 3 charachters!", {});
         }
     }
 
@@ -56,19 +64,26 @@ const Manager = () => {
         if (c) {
             setPasswordArray(passwordArray.filter((item) => item.id !== id));
             localStorage.setItem("passwords", JSON.stringify(passwordArray.filter((item) => item.id !== id)));
-            toast("Password deleted successfully! ", {
-            });
+            toast("Password deleted successfully! ", {});
         }
     }
 
+
     const editPassword = (id) => {
-        setForm(passwordArray.filter(i => i.id === id)[0])
-        setPasswordArray(passwordArray.filter((item) => item.id !== id));
+        if (isEditing) {
+            setEditId(id);
+            console.log("edit id" + id);
+            setForm(passwordArray.filter(i => i.id === id)[0])
+            setPasswordArray(passwordArray.filter((item) => item.id !== id));
+            setIsEditing(false);
+        }
+        else {
+            toast("Please save the current Password first!", {});
+        }
     }
 
     const copyText = (text) => {
-        toast("Item copied to clipboard: " + text, {
-        });
+        toast("Item copied to clipboard: " + text, {});
         navigator.clipboard.writeText(text);
     }
 
@@ -110,7 +125,7 @@ const Manager = () => {
                             trigger="hover"
                             stroke="bold"
                             style={{ width: 30, height: 35 }}>
-                        </lord-icon> <span>Save Password</span></button>
+                        </lord-icon> <span>{editId? 'Update Password':'Save Password'}</span></button>
                 </form>
                 <div className='flex flex-col items-center w-full gap-5  mb-5'>
                     {passwordArray.length !== 0 && <h2 className='font-bold'>Your Passwords:</h2>}
@@ -129,7 +144,7 @@ const Manager = () => {
                                 {passwordArray.map((item, index) => (
                                     <tr key={index}>
                                         <td className='  w-32 border py-1 border-white '>
-                                            <div className='flex items-center  justify-center text-center gap-1 md:gap-2'>
+                                            <div className='flex items-center justify-center text-center gap-1 md:gap-2'>
                                                 <a href={item.site} target='_blank' rel='noopener'>{item.site}</a><span title='Copy'><Copy className='text-blue-700 cursor-pointer size-3 md:size-4 ' onClick={() => copyText(item.site)} /></span>
                                             </div>
                                         </td>
