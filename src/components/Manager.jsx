@@ -120,7 +120,7 @@ const Manager = () => {
         if (isMobile && !hasShownScrollNotification && passwordArray.length === 0) {
             // Show notification after a short delay to ensure the table is rendered
             setTimeout(() => {
-                toast("💡 Tip: Scroll the table horizontally to view all password details!", {
+                toast("💡 Tip: swipe the table horizontally to view all password details!", {
                     autoClose: 5000,
                     position: "top-center"
                 });
