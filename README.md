@@ -88,22 +88,22 @@ Then open [http://localhost:5173](http://localhost:5173) to view it in the brows
 
 ```
 ar-passwizard-react-localStorage/
-├── public
-    ├── images/
-│   └── icons/
+├── public/
+│   └── images/
+│       └── icons/
 ├── src/
 │   ├── assets/
-│   ├── components
-            ├── Navbar.jsx
-            ├── Manager.jsx
-            └── Footer.jsx
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Manager.jsx
+│   │   └── Footer.jsx
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
 ├── .gitignore
 ├── index.html
-├── package-lock.json
 ├── package.json
+├── package-lock.json
 ├── README.md
 ├── LICENSE
 ├── vite.config.js
