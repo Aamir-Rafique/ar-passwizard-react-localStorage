@@ -142,7 +142,7 @@ You can deploy this app using:
 
 - [React](https://reactjs.org/)
 - [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/) (optional)
+- [Tailwind CSS](https://tailwindcss.com/) 
 - [React-toastify](https://fkhadra.github.io/react-toastify/introduction/)
 - Browser localStorage for Storing data
 
@@ -169,7 +169,7 @@ See the [LICENSE](./LICENSE) file for details.
 
 ---
 
-## 📷 Screenshots (Optional)
+## 📷 Screenshots 
 
 <p align="center">
   <img src="./public/images/SS-ARPassWizard.png" alt="App Screenshot" width="700" />
