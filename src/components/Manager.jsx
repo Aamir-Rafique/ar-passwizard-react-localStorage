@@ -16,12 +16,25 @@ const Manager = () => {
     //state to reveal password in table:
     const [revealedIndex, setRevealedIndex] = useState(null);
 
+    //state to show notification to tell user that they cannot edit this tabel element without clicking edit icon!
+    const [NoEditNotification, setNoEditNotification] = useState(null);
+
+    //state to track if user has been notified about horizontal scroll on mobile
+    const [hasShownScrollNotification, setHasShownScrollNotification] = useState(false);
+
     //load form values (site, username, password) from local storage
     useEffect(() => {
         const passwords = localStorage.getItem("passwords");
         if (passwords) {
             setPasswordArray(JSON.parse(passwords));
         }
+        
+        // Check if scroll notification has been shown before
+        const scrollNotificationShown = localStorage.getItem("scrollNotificationShown");
+        if (scrollNotificationShown) {
+            setHasShownScrollNotification(true);
+        }
+        
     }, [])
 
 
@@ -33,7 +46,7 @@ const Manager = () => {
     const savePassword = (e) => {
         e.preventDefault();
         if (!form.site) {
-            toast("Please input webiste name or url!", {});
+            toast("Please input webiste name or URL!", {});
         }
         else if (!form.username) {
             toast("Please input username!", {});
@@ -55,6 +68,9 @@ const Manager = () => {
                 localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));  //save site, username and password in localStorage.
                 toast("Password saved! ", {});
                 setForm({ site: '', username: '', password: '' });
+                
+                // Show scroll notification for mobile users when first password is added
+                showScrollNotificationOnMobile();
             }
         }
         else {
@@ -90,11 +106,35 @@ const Manager = () => {
         navigator.clipboard.writeText(text);
     }
 
+    const showNoEditNotification = () => {
+        if (!NoEditNotification)
+            toast("Please click Edit icon to edit", {
+                autoClose: 2000
+            });
+    }
+
+    // Function to check if device is mobile and show scroll notification
+    const showScrollNotificationOnMobile = () => {
+        const isMobile = window.innerWidth <= 768; // Mobile breakpoint
+        
+        if (isMobile && !hasShownScrollNotification && passwordArray.length === 0) {
+            // Show notification after a short delay to ensure the table is rendered
+            setTimeout(() => {
+                toast("💡 Tip: Scroll the table horizontally to view all password details!", {
+                    autoClose: 5000,
+                    position: "top-center"
+                });
+                setHasShownScrollNotification(true);
+                localStorage.setItem("scrollNotificationShown", "true");
+            }, 1000);
+        }
+    }
+
 
     return (
         <>
             <ToastContainer
-                position="bottom-right"
+                position="top-right"
                 autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop={false}
@@ -103,7 +143,7 @@ const Manager = () => {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme="dark" />
+                theme="light" />
 
             <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size-3 md:size:6 rem_4rem]"><div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#C9EBFF,transparent)]"></div></div>
 
@@ -134,66 +174,79 @@ const Manager = () => {
                     {passwordArray.length !== 0 && <h2 className='font-bold'>Your Passwords:</h2>}
                     {passwordArray.length === 0 ? <div className='text-center'>No passwords to show. Start adding passwords now!</div>
                         :
-                        <table className="table-auto    w-full rounded-xl overflow-hidden ">
-                            <thead className='bg-blue-600 text-white  text-[0.8rem] md:text-[1rem]'>
-                                <tr>
-                                    <th className='py-1.5 border'>Website</th>
-                                    <th className='py-1.5 border'>Username</th>
-                                    <th className='py-1.5 border'>Password</th>
-                                    <th className='py-1.5 border'>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody className='bg-blue-100 text-[0.8rem] md:text-[1rem] break-words'>
-                                {passwordArray.map((item, index) => (
-                                    <tr key={index}>
-                                        <td className='  w-32 border py-1 border-white '>
-                                            <div className='flex items-center justify-center text-center gap-1 md:gap-2'>
-                                                <a href={item.site} target='_blank' rel='noopener'>{item.site}</a><span title='Copy'><Copy className='text-blue-700 cursor-pointer size-3 md:size-4 ' onClick={() => copyText(item.site)} /></span>
-                                            </div>
-                                        </td>
-                                        <td className='text-center w-32 border py-1 border-white '>
-                                            <div className='flex items-center justify-center text-center gap-1 md:gap-2 '>
-                                                {item.username}<span title='Copy'> <Copy className='text-blue-700 cursor-pointer size-3 md:size-4 ' onClick={() => copyText(item.username)} /></span>
-                                            </div>
-                                        </td>
-
-                                        <td className='text-center w-27 border py-1 border-white '>
-                                            <div className='flex items-center  justify-center text-center gap-1 md:gap-2 '>
-                                                <input
-                                                  onMouseEnter={() => setRevealedIndex(index)}
-                                                  onMouseLeave={() => setRevealedIndex(null)}
-                                                  type={revealedIndex === index ? "text" : "password"}
-                                                  className=' w-[40%] px-1.5 text-center outline-none hover:ring-1 ring-blue-600 hover:bg-blue-50 duration-250 rounded-2xl'
-                                                  value={item.password}
-                                                />
-                                                <span title='Copy'><Copy className='text-blue-700 cursor-pointer size-3 md:size-4 ' onClick={() => copyText(item.password)} /></span>
-                                            </div>
-                                        </td>
-
-                                        <td className='text-center w-20  border py-1 border-white '>
-                                            <div className='flex items-center justify-center mx-0.5 gap-2 md:gap-5'>
-                                                <span className='cursor-pointer' onClick={() => editPassword(item.id)}><lord-icon
-                                                    src="https://cdn.lordicon.com/exymduqj.json"
-                                                    trigger="hover"
-                                                    title="Edit"
-                                                    stroke="bold"
-                                                    colors="primary:#0,secondary:#7F00FF"
-                                                    style={{ width: 25, height: 25 }}>
-                                                </lord-icon></span>
-                                                <span className='cursor-pointer' onClick={() => deletePassword(item.id)}><lord-icon
-                                                    src="https://cdn.lordicon.com/jzinekkv.json"
-                                                    trigger="hover"
-                                                    title="Delete"
-                                                    stroke="bold"
-                                                    colors="primary:#0,secondary:#7F00FF"
-                                                    style={{ width: 25, height: 25 }}>
-                                                </lord-icon></span>
-                                            </div>
-                                        </td>
+                        <div class="overflow-x-auto w-full">
+                            <table className="table-auto w-180 md:w-full rounded-xl overflow-hidden ">
+                                <thead className='bg-blue-600 text-white  text-[0.8rem] md:text-[1rem]'>
+                                    <tr>
+                                        <th className='py-2 border'>Website</th>
+                                        <th className='py-2 border'>Username</th>
+                                        <th className='py-2 border'>Password</th>
+                                        <th className='py-2 border'>Action</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>}
+                                </thead>
+                                <tbody className='bg-blue-100 text-[0.8rem] md:text-[1rem] '>
+                                    {passwordArray.map((item, index) => (
+                                        <tr key={index}>
+                                            <td className='w-38 border py-2 border-white '>
+                                                <div className='flex items-center justify-center text-center gap-1'>
+                                                    <input
+                                                        onKeyDown={showNoEditNotification}
+                                                        className=' w-[80%]  px-2 py-1 text-center  outline-none  bg-blue-50 hover:ring-1  hover:ring-blue-600 active:ring-1  active:ring-blue-600  duration-250 rounded-2xl'
+                                                        value={item.site}
+                                                    /><a href={item.site} target='_blank' rel='noopener'  >  </a><span title='Copy'><Copy className='text-blue-700 cursor-pointer size-3.5 md:size-4 ' onClick={() => copyText(item.site)} /></span>
+                                                </div>
+                                            </td>
+                                            <td className='text-center w-32 border py-2 md:py-1 border-white '>
+                                                <div className='flex items-center justify-center text-center gap-2 '>
+                                                    <input
+                                                        onKeyDown={showNoEditNotification}
+                                                        className=' w-[70%]  px-2 py-1 text-center  outline-none  bg-blue-50 hover:ring-1  hover:ring-blue-600 active:ring-1  active:ring-blue-600  duration-250 rounded-2xl'
+                                                        value={item.username}
+                                                    />
+                                                    <span title='Copy'> <Copy className='text-blue-700 cursor-pointer size-3.5 md:size-4 ' onClick={() => copyText(item.username)} /></span>
+                                                </div>
+                                            </td>
+
+                                            <td className='text-center w-22 md:w-25 border py-1 border-white '>
+                                                <div className='flex items-center  justify-center text-center gap-2 '>
+                                                    <input
+                                                        onKeyDown={showNoEditNotification}
+                                                        onMouseEnter={() => setRevealedIndex(index)}
+                                                        onMouseLeave={() => setRevealedIndex(null)}
+                                                        type={revealedIndex === index ? "text" : "password"}
+                                                        className='w-[60%]   px-2 py-1 text-center  outline-none  bg-blue-50 hover:ring-1  hover:ring-blue-600 active:ring-1  active:ring-blue-600   duration-250 rounded-2xl'
+                                                        value={item.password}/>
+                                                    <span title='Copy'><Copy className='text-blue-700 cursor-pointer size-3.5 md:size-4 ' onClick={() => copyText(item.password)} /></span>
+                                                </div>
+                                            </td>
+
+                                            <td className='text-center w-25 md:w-20  border py-1 border-white '>
+                                                <div className='flex items-center justify-center gap-5'>
+                                                    <span className='cursor-pointer ' onClick={() => editPassword(item.id)}><lord-icon
+                                                        src="https://cdn.lordicon.com/exymduqj.json"
+                                                        trigger="hover"
+                                                        title="Edit"
+                                                        stroke="bold"
+                                                        colors="primary:#0,secondary:#7F00FF"
+                                                        style={{ width: 23, height: 23 }}>
+                                                    </lord-icon></span>
+                                                    <div className='border-l border-l-white h-7'></div>
+                                                    <span className='cursor-pointer' onClick={() => deletePassword(item.id)}><lord-icon
+                                                        src="https://cdn.lordicon.com/jzinekkv.json"
+                                                        trigger="hover"
+                                                        title="Delete"
+                                                        stroke="bold"
+                                                        colors="primary:#0,secondary:#7F00FF"
+                                                        style={{ width: 23, height: 23 }}>
+                                                    </lord-icon></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <div className='mt-2'></div>
+                        </div>}
                 </div>
             </div >
         </>
