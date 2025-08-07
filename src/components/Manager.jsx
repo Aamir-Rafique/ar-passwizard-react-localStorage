@@ -110,12 +110,12 @@ const Manager = () => {
                     <p>Your own Password Manager</p>
                 </div>
                 <form action="" onSubmit={savePassword} className=' w-full flex  flex-col  items-center gap-6 p-1'>
-                    <input value={form.site} onChange={handleChange} type="text" placeholder='Enter Website URL or App name' className='w-full rounded-2xl border text-center pt-1 pb-1 border-blue-700  focus:ring-1 ring-blue-400  duration-200 outline-none bg-white  ' name="site" id="" />
+                    <input value={form.site} onChange={handleChange} type="text" placeholder='Enter Website URL or App name' className='w-full rounded-2xl border text-center pt-1 pb-1 border-blue-700  focus:ring-1 ring-blue-400  duration-200 outline-none bg-white  ' name="site" id="site" />
                     <div className='w-full flex flex-col md:flex-row gap-6 md:gap-8 ' >
-                        <input value={form.username} onChange={handleChange} type="text" placeholder='Input Username' className='p-1 w-full rounded-2xl border border-blue-700  focus:ring-1 ring-blue-400  bg-white duration-200 outline-none text-center' name="username" id="" />
+                        <input value={form.username} onChange={handleChange} type="text" placeholder='Input Username' className='p-1 w-full rounded-2xl border border-blue-700  focus:ring-1 ring-blue-400  bg-white duration-200 outline-none text-center' name="username" id="username" />
 
                         <div className='w-full'>
-                            <input value={form.password} onChange={handleChange} type="password" placeholder='Input Password' className='p-1 w-full border-blue-700  focus:ring-1 ring-blue-400 bg-white  duration-200 outline-none   rounded-2xl border pl-2 text-center' name="password" id="" />
+                            <input value={form.password} onChange={handleChange} type="password" placeholder='Input Password' className='p-1 w-full border-blue-700  focus:ring-1 ring-blue-400 bg-white  duration-200 outline-none   rounded-2xl border pl-2 text-center' name="password" id="password" />
                         </div>
                     </div>
                     <button type='submit' className='flex justify-center gap-1 items-center  rounded-2xl px-3 bg-blue-300 hover:bg-blue-400  outline-none hover:text-white hover:ring-2 active:ring-2 ring-blue-600 duration-200  cursor-pointer '>
