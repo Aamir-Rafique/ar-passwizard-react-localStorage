@@ -26,6 +26,7 @@ const Manager = () => {
     // Independence Day Popup State
     const [showIndependencePopup, setShowIndependencePopup] = useState(false);
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+    const [is14August, setIs14August] = useState(false);
 
     //load form values (site, username, password) from local storage
     useEffect(() => {
@@ -43,6 +44,8 @@ const Manager = () => {
         // Show popup only in August and only if not dismissed this session
         const now = new Date();
         const isAugust = now.getMonth() === 7; // 0-indexed, 7 = August
+        const is14Aug = isAugust && now.getDate() === 14;
+        setIs14August(is14Aug);
         const popupDismissed = sessionStorage.getItem('independencePopupDismissed');
         if (isAugust && !popupDismissed) {
             setShowIndependencePopup(true);
@@ -160,8 +163,14 @@ const Manager = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-green-300 bg-opacity-50">
                     <Confetti width={windowSize.width} height={windowSize.height} numberOfPieces={500}  recycle={false} />
                     <div className="relative bg-green-50 rounded-2xl shadow-xl p-6 max-w-md w-[90%] text-center animate-bounceIn">
-                        <h2 className="text-2xl md:text-3xl font-bold text-green-700 mb-2"> Happy Independence Day!</h2>
-                        <p className="text-lg md:text-xl text-gray-700 mb-4">Wishing all Pakistanis a joyful 14th August!<br />May your day be filled with happiness and pride. 🎉</p>
+                        <h2 className="text-2xl md:text-3xl font-bold text-green-700 mb-2">
+                            {is14August ? 'Happy Independence Day!' : 'Happy Independence Month!'}
+                        </h2>
+                        <p className="text-lg md:text-xl text-gray-700 mb-4">
+                            {is14August
+                                ? <>Wishing all Pakistanis a joyful 14th August!<br />May your day be filled with happiness and pride. 🎉</>
+                                : <>Wishing all Pakistanis a wonderful August!<br />Celebrate freedom and unity all month long. 🇵🇰</>}
+                        </p>
                         <button
                             onClick={handleClosePopup}
                             className="mt-2 px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
