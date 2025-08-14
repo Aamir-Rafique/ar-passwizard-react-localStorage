@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import Confetti from 'react-confetti';
 import { Copy, Type } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
@@ -22,20 +23,41 @@ const Manager = () => {
     //state to track if user has been notified about horizontal scroll on mobile
     const [hasShownScrollNotification, setHasShownScrollNotification] = useState(false);
 
+    // Independence Day Popup State
+    const [showIndependencePopup, setShowIndependencePopup] = useState(false);
+    const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+
     //load form values (site, username, password) from local storage
     useEffect(() => {
         const passwords = localStorage.getItem("passwords");
         if (passwords) {
             setPasswordArray(JSON.parse(passwords));
         }
-        
+
         // Check if scroll notification has been shown before
         const scrollNotificationShown = localStorage.getItem("scrollNotificationShown");
         if (scrollNotificationShown) {
             setHasShownScrollNotification(true);
         }
-        
-    }, [])
+
+        // Show popup only in August and only if not dismissed this session
+        const now = new Date();
+        const isAugust = now.getMonth() === 7; // 0-indexed, 7 = August
+        const popupDismissed = sessionStorage.getItem('independencePopupDismissed');
+        if (isAugust && !popupDismissed) {
+            setShowIndependencePopup(true);
+        }
+
+        // Listen for window resize for confetti
+        const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    // Dismiss popup and remember for session
+    const handleClosePopup = () => {
+        setShowIndependencePopup(false);
+        sessionStorage.setItem('independencePopupDismissed', 'true');
+    };
 
 
     const handleChange = (e) => {
@@ -68,7 +90,7 @@ const Manager = () => {
                 localStorage.setItem("passwords", JSON.stringify([...passwordArray, form]));  //save site, username and password in localStorage.
                 toast("Password saved! ", {});
                 setForm({ site: '', username: '', password: '' });
-                
+
                 // Show scroll notification for mobile users when first password is added
                 showScrollNotificationOnMobile();
             }
@@ -116,7 +138,7 @@ const Manager = () => {
     // Function to check if device is mobile and show scroll notification
     const showScrollNotificationOnMobile = () => {
         const isMobile = window.innerWidth <= 768; // Mobile breakpoint
-        
+
         if (isMobile && !hasShownScrollNotification && passwordArray.length === 0) {
             // Show notification after a short delay to ensure the table is rendered
             setTimeout(() => {
@@ -133,6 +155,22 @@ const Manager = () => {
 
     return (
         <>
+            {/* Independence Day Popup */}
+            {showIndependencePopup && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-green-300 bg-opacity-50">
+                    <Confetti width={windowSize.width} height={windowSize.height} numberOfPieces={500}  recycle={false} />
+                    <div className="relative bg-green-50 rounded-2xl shadow-xl p-6 max-w-md w-[90%] text-center animate-bounceIn">
+                        <h2 className="text-2xl md:text-3xl font-bold text-green-700 mb-2"> Happy Independence Day!</h2>
+                        <p className="text-lg md:text-xl text-gray-700 mb-4">Wishing all Pakistanis a joyful 14th August!<br />May your day be filled with happiness and pride. 🎉</p>
+                        <button
+                            onClick={handleClosePopup}
+                            className="mt-2 px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
             <ToastContainer
                 position="top-right"
                 autoClose={3000}
@@ -145,7 +183,7 @@ const Manager = () => {
                 pauseOnHover
                 theme="light" />
 
-            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size-3 md:size:6 rem_4rem]"><div class="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#C9EBFF,transparent)]"></div></div>
+            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size-3 md:size:6 rem_4rem]"><div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#C9EBFF,transparent)]"></div></div>
 
             <div className=' md:mx-60 mt-2 flex  flex-col justify-center items-center gap-5 md:gap-7 p-4 ' >
                 <div className='text-center'>
@@ -215,7 +253,7 @@ const Manager = () => {
                                                         onMouseLeave={() => setRevealedIndex(null)}
                                                         type={revealedIndex === index ? "text" : "password"}
                                                         className='w-[60%]   px-2 py-1 text-center  outline-none  bg-blue-50 hover:ring-1  hover:ring-blue-600 active:ring-1  active:ring-blue-600   duration-250 rounded-2xl'
-                                                        value={item.password}/>
+                                                        value={item.password} />
                                                     <span title='Copy'><Copy className='text-blue-700 cursor-pointer size-3.5 md:size-4 ' onClick={() => copyText(item.password)} /></span>
                                                 </div>
                                             </td>
